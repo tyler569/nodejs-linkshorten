@@ -7,10 +7,6 @@ r.connect({host: settings.rethinkdb_ip}, function(err, conn){
 		if(req.url === '/favicon.ico'){
 			return;
 		}
-		if(req.url === '/mu-0e24b17b-23dce65a-c0b14b75-e74057be'){
-			ress.writeHead(200, {'Content-Type': 'text/plain'});
-			ress.end('42');
-		}
 		var parsedURL = url.parse(req.url)
 		if(parsedURL['pathname'] === '/shorten'){
 			var parsedUrl = url.parse(req.url, true);
