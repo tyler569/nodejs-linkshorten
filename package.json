@@ -1,0 +1,3 @@
+"dependencies": {
+    "rethinkdb": "1.10.0-0"
+  }
