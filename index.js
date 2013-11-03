@@ -16,6 +16,7 @@ http.createServer(function (req, res) {
 	}
 	var parsedURL = url.parse(req.url, true);
 	var id = url.parse(req.url, true);
+	var remoteIP = req.connection.remoteAddress
 	if (parsedURL['pathname'] === '/'){
 		var queryAsObject = parsedURL.query;
 		var getURL = queryAsObject['url'];
@@ -26,7 +27,7 @@ http.createServer(function (req, res) {
 				res.writeHead(200, {'Content-Type': 'text/plain'})
 				var idOut=result.insertId.toString();
 				res.end('Your id is: '+idOut);
-				console.log(getURL+' saved by __ at id '+idOut);
+				console.log(getURL+' saved by '+remoteIP+' at id '+idOut);
 			});
 		} else if (typeof getID != 'undefined' && typeof getURL === 'undefined') {
 			sql.query('SELECT url FROM urls WHERE id=?;', [getID], function(err, rows){
@@ -37,7 +38,7 @@ http.createServer(function (req, res) {
 				}
 				res.writeHead(301, {'Location': urlOut});
 				res.end();
-				console.log(urlOut+' requested by __');
+				console.log(urlOut+' requested by '+remoteIP);
 			});
 		} else {
 			res.writeHead(200, {'Content-Type': 'text/plain'});
