@@ -38,7 +38,7 @@ http.createServer(function (req, res) {
 				}
 				res.writeHead(301, {'Location': urlOut});
 				res.end();
-				console.log(urlOut+' requested by '+remoteIP);
+				console.log(urlOut+' (id '+getID+') requested by '+remoteIP);
 			});
 		} else {
 			res.writeHead(200, {'Content-Type': 'text/plain'});
