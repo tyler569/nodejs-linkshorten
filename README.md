@@ -1,7 +1,7 @@
 Node.JS-Link-Generator
 ======================
 
-<h4>A link generator made in Node.JS using RethinkDB as a backend</h4>
+<h4>A link generator made in Node.JS using MySQL as a backend</h4>
 
 <h2><b>Install</b></h2>
 Update settings.json with the IP of the machine Node.js is running on and a ip of a MySQL (or equivalent) server
