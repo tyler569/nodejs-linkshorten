@@ -1,62 +1,52 @@
 var http = require('http');
 var url = require('url');
 var mysql = require('mysql');
-var settings = require('./settings.json');
 
-sql = mysql.createConnection({
-	"host": "localhost",
-	"user": "root",
-	"password": "root",
-	"database": "URL_Shortening"
-});
+var settings = require('./settings.json');
+sql = mysql.createConnection(settings.mysql);
+
 sql.connect(function(err) {
 	if (err) throw err;
-})
-sql.query('CREATE TABLE IF NOT EXISTS urls (id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, url VARCHAR(100));')
+});
+sql.query('CREATE TABLE IF NOT EXISTS urls (id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, url VARCHAR(100));');
 
-http.createServer(function (req, ress) {
+http.createServer(function (req, res) {
 	if (req.url === '/favicon.ico') {
 		return;
 	}
-	var parsedURL = url.parse(req.url)
-	if (parsedURL['pathname'] === '/shorten'){
-		var parsedUrl = url.parse(req.url, true);
-		var queryAsObject = parsedUrl.query;
+	var parsedURL = url.parse(req.url, true);
+	var id = url.parse(req.url, true);
+	if (parsedURL['pathname'] === '/'){
+		var queryAsObject = parsedURL.query;
 		var getURL = queryAsObject['url'];
-
-		if (typeof getURL != 'undefined') {
+		var getID = queryAsObject['id'];
+		if (typeof getURL != 'undefined' && typeof getID === 'undefined') {
 			sql.query('INSERT INTO urls VALUES (id, ?);', [getURL], function(err, result){
 				if (err) throw err;
-				ress.writeHead(200, {'Content-Type': 'text/plain'})
-				ress.end('Your key is: '+result.insertId.toString());
+				res.writeHead(200, {'Content-Type': 'text/plain'})
+				var idOut=result.insertId.toString();
+				res.end('Your id is: '+idOut);
+				console.log(getURL+' saved by __ at id '+idOut);
 			});
-
-		} else {
-			ress.writeHead(200, {'Content-Type': 'text/plain'});
-			ress.end("Please insure you have included a URL");
-		}
-
-	} else if(parsedURL['pathname'] === '/url') {
-
-		var parsedUrl = url.parse(req.url, true);
-		var queryAsObject = parsedUrl.query;
-		var id = queryAsObject['id'];
-		if (typeof id != 'undefined') {
-			sql.query('SELECT url FROM urls WHERE id=?;', [id], function(err, rows){
+		} else if (typeof getID != 'undefined' && typeof getURL === 'undefined') {
+			sql.query('SELECT url FROM urls WHERE id=?;', [getID], function(err, rows){
 				if (err) throw err;
-				ress.writeHead(200, {'Content-Type': 'text/plain'});
-				ress.end(rows[0].url);
+				urlOut=rows[0].url;
+				if (url.parse(urlOut)['protocol'] === null){
+					urlOut = 'http://'+urlOut;
+				}
+				res.writeHead(301, {'Location': urlOut});
+				res.end();
+				console.log(urlOut+' requested by __');
 			});
-
 		} else {
-			ress.writeHead(200, {'Content-Type': 'text/plain'});
-			ress.end("Please insure you have included a ID");
+			res.writeHead(200, {'Content-Type': 'text/plain'});
+			res.end('Landing page TBI here');
 		}
 	} else {
-
-		ress.writeHead(404, {'Content-Type': 'text/plain'});
-		ress.end("File Not Found");
+		res.writeHead(404, {'Content-Type': 'text/plain'});
+		res.end("File Not Found");
 	}
-}).listen(8081, settings.nodejs_ip);
+}).listen(settings.nodejs_port, settings.nodejs_ip);
 console.log('Server Running');
 

@@ -1,4 +1,12 @@
 {
-    "nodejs_ip" : "",
-    "rethinkdb_ip" : ""
+	"nodejs_ip" : "",
+	"nodejs_port": 8081,
+	"mysql" :{
+		"host": "127.0.0.1",
+		"user": "root",
+		"password": "root",
+		"database": "URL_Shortening"
+	}
 }
+        
+
