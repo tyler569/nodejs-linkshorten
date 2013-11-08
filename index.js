@@ -56,7 +56,7 @@ http.createServer(function (req, res) {
 		} else if (typeof getID != 'undefined' && typeof getURL === 'undefined') { // Return URL
 			sql.query('SELECT url FROM urls WHERE id=?;', [getID], function(err, rows){
 				if (err) throw err;
-				urlOut=rows[0].url;A
+				urlOut=rows[0].url;
 				// Since this forewards automatically, add "http://" if it wasn't given
 				if (url.parse(urlOut)['protocol'] === null){
 					urlOut = 'http://'+urlOut;
