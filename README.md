@@ -1,4 +1,4 @@
-Node.JS-Link-Generator
+nodejs-linkshorten
 ======================
 
 <h4>A link shortener made in node.js using MySQL as a backend</h4>
