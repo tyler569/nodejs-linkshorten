@@ -57,17 +57,17 @@ http.createServer(function (req, res) {
 				if (err) throw err;
 				//TODO : make actual pages
 				res.writeHead(200, {'Content-Type': 'text/plain'})
-				var idOut=result.insertId.toString();
-				res.end('Your id is: '+idOut);
+				var idOut = result.insertId.toString();
+				res.end('http://' + settings.nodejs_ip + '?id=' + idOut);
 				// Log out queries
-				console.log(getURL+' saved by '+remoteIP+' at id '+idOut);
+				console.log(getURL + ' saved by ' + remoteIP+' at id ' + idOut);
 			});
 		}
 		// Return URL 
 		else if (typeof getID != 'undefined' && typeof getURL === 'undefined') {
 			sql.query('SELECT url FROM urls WHERE id=?;', [getID], function(err, rows){
 				if (err) throw err;
-				urlOut=rows[0].url;
+				urlOut = rows[0].url;
 				
 				// Since this forewards automatically, add "http://" if it wasn't given
 				if (url.parse(urlOut)['protocol'] === null){
@@ -76,7 +76,7 @@ http.createServer(function (req, res) {
 				res.writeHead(301, {'Location': urlOut});
 				res.end();
 				// Log out queries
-				console.log(urlOut+' (id '+getID+') requested by '+remoteIP);
+				console.log(urlOut + ' (id ' + getID + ') requested by ' + remoteIP);
 				
 				// TODO : Add a link to the page in body for browsers that don't autoredirect
 			});
