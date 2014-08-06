@@ -26,7 +26,7 @@ sql = mysql.createConnection(settings.mysql);
 
 sql.connect(function(err) {
 	// TODO : Make errors actually give useful reporting information
-	if (err) throw err; 
+	if (err) console.log(err); 
 });
 
 // Create the urls table if it is not found in the database
@@ -54,7 +54,7 @@ http.createServer(function (req, res) {
 		// New entry
 		if (typeof getURL != 'undefined' && typeof getID === 'undefined') {
 			sql.query('INSERT INTO urls VALUES (id, ?);', [getURL], function(err, result){
-				if (err) throw err;
+				if (err) console.log(err);
 				//TODO : make actual pages
 				res.writeHead(200, {'Content-Type': 'text/plain'})
 				var idOut = result.insertId.toString();
@@ -66,7 +66,7 @@ http.createServer(function (req, res) {
 		// Return URL 
 		else if (typeof getID != 'undefined' && typeof getURL === 'undefined') {
 			sql.query('SELECT url FROM urls WHERE id=?;', [getID], function(err, rows){
-				if (err) throw err;
+				if (err) console.log(err);
 				urlOut = rows[0].url;
 				
 				// Since this forewards automatically, add "http://" if it wasn't given
